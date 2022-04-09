@@ -19,7 +19,7 @@ int	ft_char_write(va_list vl, char *flags, int width)
 
 	c = va_arg(vl, int);
 	charno = 0;
-	if (flags[6] == '\0' && width > 1)
+	if (flags[6] == 0 && width > 1)
 	{
 		while (width-- > 1)
 			charno += write(1, " ", 1);

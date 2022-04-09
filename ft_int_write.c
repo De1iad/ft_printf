@@ -6,14 +6,22 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 18:14:09 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/05 18:14:09 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/06 11:54:56 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include "./libft/libft.h"
 
-char	*ft_itoa(int n);
-size_t	ft_strlen(const char *str);
+int	check_negative(char *flags)
+{
+	int	negative;
+
+	negative = 0;
+	while (flags[3]-- > 0)
+		negative += 1;
+	return (negative);
+}
 
 int	print_int(char *str, char *flags, int width, int prec)
 {
@@ -22,14 +30,14 @@ int	print_int(char *str, char *flags, int width, int prec)
 
 	charno = 0;
 	i = 0;
-	while (flags[6] != 1 && flags[5] != 1 && width-- > 0)
+	while (flags[6] != 1 && flags[5] == 0 && width-- > 0)
 		charno += write(1, " ", 1);
-	while (flags[6] != 1 && flags[5] == 1 && width-- > 0)
+	while (flags[6] == 0 && flags[5] != 0 && width-- > 0)
 		charno += write(1, "0", 1);
-	if (flags[3] == 1 && str[0] != '-')
+	if (check_negative(flags) % 2 != 0 && str[0] != '-')
 		charno += write(1, "+", 1);
-	if (flags[2] == 1 && str[0] == '-')
-		i++;
+	else if (flags[2] != 0 && str[0] != '-')
+		charno += write(1, " ", 1);
 	while (prec-- > (int)ft_strlen(str))
 		charno += write(1, "0", 1);
 	while (str[i])
@@ -52,9 +60,9 @@ int	ft_int_write(va_list vl, char *flags, int width, int prec)
 		width = va_arg(vl, int);
 	if (flags[0] == '*')
 		prec = va_arg(vl, int);
-	if (flags[0] != '\0' || flags[1] != '\0')
+	if (flags[0] != 0 || flags[1] != 0)
 		width -= prec;
-	if (flags[0] == '\0' && flags[1] == '\0')
+	if (flags[0] == 0 && flags[1] == 0)
 		width -= ft_strlen(str);
 	charno += print_int(str, flags, width, prec);
 	free(str);

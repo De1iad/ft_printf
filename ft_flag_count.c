@@ -12,6 +12,15 @@
 
 #include "ft_printf.h"
 
+void	ft_bzero_printf(void *str, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+		((char *)str)[i++] = 0;
+}
+
 int	char_count_dec(long x)
 {
 	int	count;
@@ -33,15 +42,17 @@ void	ft_flag_count(char *flags, int width, int prec)
 	flags[17] = 0;
 	while (i < 17)
 	{
-		if (flags[i] != '\0')
-			flags[17] += 1;
+		if (flags[i] >= 0 && flags[i] <= 9)
+			flags[17] += flags[i];
+		else
+			flags[17]++;
 		i++;
 	}
-	if (flags[7] != '\0')
+	if (flags[7] != 0)
 		flags[17] += char_count_dec(width) - 1;
 	if (flags[0] == 1)
 		flags[17] += 1;
-	if (flags[1] != '\0')
+	if (flags[1] != 0)
 		flags[17] += char_count_dec(prec);
 	return ;
 }
