@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:45:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/05 14:45:52 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/09 17:27:56 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_char_write(va_list vl, char *flags, int width)
 			charno += write(1, " ", 1);
 	}
 	charno += write(1, &c, 1);
-	if (flags[6] == 1 && width > 1)
+	if (flags[6] != 0 && width > 1)
 	{
 		while (width-- > 1)
 			charno += write(1, " ", 1);

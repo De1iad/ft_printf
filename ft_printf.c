@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:37:57 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/06 12:44:44 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/10 17:52:18 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,9 @@ void	ft_flag_check(const char *s, char *flags, int i)
 		&& s[i] != 'i' && s[i] != 'u' && s[i] != 'x' && s[i] != 'X'
 		&& s[i] != '%')
 	{
-		if (s[i] == '.' && (s[i + 1] == '*' || (s[i + 1] < '0'
-					|| s[i + 1] > '9')))
-			flags[0] = s[i + 1];
-		if (s[i] == '.' && s[i + 1] >= '0' && s[i + 1] <= '9')
+		if (s[i] == '.' && s[i + 1] == '*')
+			flags[0] = 1;
+		if (s[i] == '.')
 			flags[1] = 1;
 		if (s[i] == ' ')
 			flags[2] += 1;
@@ -78,13 +77,13 @@ void	ft_flag_check(const char *s, char *flags, int i)
 			flags[3] += 1;
 		if (s[i] == '#')
 			flags[4] = 1;
-		if (s[i] == '0' && (flags[7] == 0 && flags[1] == 0))
+		if (s[i] == '0' && flags[7] == 0 && flags[1] == 0)
 			flags[5] += 1;
 		if (s[i] == '-')
-			flags[6] = 1;
-		if (((s[i] > '0' && s[i] <= '9' && (s[i - 1] < 0 || s[i - 1] > 9))
+			flags[6] += 1;
+		if (((s[i] > '0' && s[i] <= '9' && (s[i - 1] <= '0' || s[i - 1] > '9'))
 				|| s[i] == '*') && (s[i - 1] != '.' || i == 0))
-			flags[7] = s[i];
+			flags[7] = 1;
 		i++;
 	}
 	return ;
@@ -111,6 +110,9 @@ int	ft_print_arg(const char *s, va_list vl, char *flags)
 			width = ft_atoi(s + i);
 		if (s[i] == '.' && s[i + 1] <= '9' && s[i + 1] >= '0')
 			prec = ft_atoi(s + i++ + 1);
+		if (s[i] == '.' && (s[i + 1] > '9' || (s[i + 1] < '0'
+					&& s[i + 1] != '*')))
+			flags[17] -= 1;
 		i++;
 	}
 	conver_type(s + i, flags);
@@ -135,7 +137,7 @@ int	ft_printf(const char *str, ...)
 			writeno += write(1, &str[i], 1);
 		if (str[i] == '%')
 		{
-			ft_bzero_printf(flags, 19 * sizeof(char));
+			ft_bzero_printf(flags, 19);
 			writeno += ft_print_arg(str + i + 1, vl, flags);
 			flags[17] = flags[17] + i;
 			while (str[i + 1] && i < flags[17])

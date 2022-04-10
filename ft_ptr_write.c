@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 12:37:52 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/06 12:50:20 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/10 17:41:29 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,20 @@ int	ft_putptr(uintptr_t addr)
 }
 
 int	ft_ptr_count(uintptr_t p)
+{
+	int	count;
+
+	count = 0;
+	if (!p)
+		return (3);
+	while (p != 0)
+	{
+		p = p / 16;
+		count++;
+	}
+	return (count);
+}
+
 /*int	width_write_ptr(int width, char *flags, int charno, uintptr_t addr)
 {
 	int	count;
@@ -65,15 +79,16 @@ int	ft_ptr_write(va_list vl, char *flags, int width)
 	int			charno;
 
 	addr = va_arg(vl, uintptr_t);
-	if (!addr)
-		addr = 0;
 	charno = 0;
-	width -= ft_strlen(addr);
+	width -= 2 + ft_ptr_count(addr);
 	while (flags[6] == 0 && width-- > 0)
 		charno += write(1, " ", 1);
-	charno += write(1, "0x", 2);
+	if (addr)
+		charno += write(1, "0x", 2);
+	else
+		charno += write(1, "(nil)", 5);
 	charno += ft_putptr(addr);
-	while (flags[6] == 1 && width > 0)
+	while (flags[6] != 0 && width-- > 0)
 		charno += write(1, " ", 1);
 	return (charno);
 }

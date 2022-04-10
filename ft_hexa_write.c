@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 14:54:10 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/06 12:32:42 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/10 17:50:53 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	width_write_hex(int width, char *flags, int x)
 	charno = 0;
 	while (width > 0)
 	{
-		if (flags[5] == 1 && flags[6] == 0 && flags[4] == 0)
+		if (flags[5] != 0 && flags[6] + flags[4] + flags[1] + flags[0] == 0)
 			charno += write(1, "0", 1);
 		else if (flags[4] == 0)
 			charno += write(1, " ", 1);
@@ -29,8 +29,6 @@ int	width_write_hex(int width, char *flags, int x)
 		charno += write(1, "0x", 2);
 	if (flags[4] == 1 && flags[15] == 1 && x != 0)
 		charno += write(1, "0X", 2);
-	if (flags[4] == 1 && x == 0)
-		charno += write(1, "0", 1);
 	return (charno);
 }
 
@@ -61,11 +59,13 @@ int	hexa_conv(long x, char *flags)
 	return (charno);
 }
 
-int	char_count_hex(long x)
+int	char_count_hex(unsigned int x)
 {
 	int	count;
 
 	count = 0;
+	if (x == 0)
+		return (1);
 	while (x != 0)
 	{
 		x = x / 16;
@@ -85,19 +85,17 @@ int	ft_hexa_write(va_list vl, char *flags, int width, int prec)
 	charno = 0;
 	if (flags[1] == 1 && prec > count)
 		width -= prec;
-	else
+	else if (x != 0 || flags[1] == 0 || prec != 0)
 		width -= count;
 	if ((width > 0 && flags[6] == 0) || flags[4] == 1)
 		charno += width_write_hex(width, flags, x);
-	while (count < prec)
-	{
+	while (count < prec--)
 		charno += write(1, "0", 1);
-		prec--;
-	}
-	if (x == 0)
-		return (charno + write(1, "0", 1));
-	charno += hexa_conv(x, flags);
-	if (width > 0 && flags[6] == 1)
+	if (x == 0 && (flags[1] == 0 || prec != -1))
+		charno += write(1, "0", 1);
+	else
+		charno += hexa_conv(x, flags);
+	if (width > 0 && flags[6] != 0)
 		charno += width_write_hex(width, flags, x);
 	return (charno);
 }

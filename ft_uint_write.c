@@ -6,7 +6,7 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 11:07:56 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/06 11:43:50 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/10 17:48:37 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,23 @@ char	*ft_unitoa(unsigned int n)
 	return (str);
 }
 
-int ft_uint_write(va_list vl, char *flags, int width, int prec)
+int	ft_uint_write(va_list vl, char *flags, int width, int prec)
 {
-    unsigned int    n;
-    char            *str;
-    int             charno;
+	unsigned int	n;
+	char			*str;
+	int				charno;
 
-    n = va_arg(vl, int);
-    str = ft_unitoa(n);
-    charno = 0;
+	n = va_arg(vl, int);
+	str = ft_unitoa(n);
+	charno = 0;
 	if (flags[7] == '*')
 		width = va_arg(vl, int);
 	if (flags[0] == '*')
 		prec = va_arg(vl, int);
-	if (flags[0] != 0 || flags[1] != 0)
+	if (prec > (int)ft_strlen(str))
 		width -= prec;
-	if (flags[0] == 0 && flags[1] == 0)
-		width -= ft_strlen(str);
+	else if (str[0] != '0' || prec != 0 || flags[0] + flags[1] == 0)
+		width -= (int)ft_strlen(str);
 	charno += print_int(str, flags, width, prec);
 	free(str);
 	return (charno);
