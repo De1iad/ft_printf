@@ -6,12 +6,13 @@
 /*   By: obibby <obibby@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:37:57 by obibby            #+#    #+#             */
-/*   Updated: 2022/04/10 17:52:18 by obibby           ###   ########.fr       */
+/*   Updated: 2022/04/11 14:35:53 by obibby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "./libft/libft.h"
+#include <stdio.h>
 
 // calls write function depending on type.
 
